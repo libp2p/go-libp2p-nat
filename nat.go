@@ -8,14 +8,14 @@ import (
 	"sync"
 	"time"
 
-	ma "github.com/ipfs/go-ipfs/Godeps/_workspace/src/github.com/jbenet/go-multiaddr"
-	manet "github.com/ipfs/go-ipfs/Godeps/_workspace/src/github.com/jbenet/go-multiaddr-net"
+	ma "github.com/jbenet/go-multiaddr"
+	manet "github.com/jbenet/go-multiaddr-net"
 
-	nat "github.com/ipfs/go-ipfs/Godeps/_workspace/src/github.com/fd/go-nat"
-	goprocess "github.com/ipfs/go-ipfs/Godeps/_workspace/src/github.com/jbenet/goprocess"
-	periodic "github.com/ipfs/go-ipfs/Godeps/_workspace/src/github.com/jbenet/goprocess/periodic"
-	notifier "github.com/ipfs/go-ipfs/thirdparty/notifier"
-	logging "github.com/ipfs/go-ipfs/vendor/go-log-v1.0.0"
+	nat "github.com/fd/go-nat"
+	goprocess "github.com/jbenet/goprocess"
+	periodic "github.com/jbenet/goprocess/periodic"
+	notifier "thirdparty/notifier"
+	logging "QmWRypnfEwrgH4k93KEHN5hng7VjKYkWmzDYRuTZeh2Mgh/go-log"
 )
 
 var (
@@ -83,7 +83,7 @@ func (nat *NAT) Process() goprocess.Process {
 }
 
 // Notifier is an object that assists NAT in notifying listeners.
-// It is implemented using github.com/ipfs/go-ipfs/thirdparty/notifier
+// It is implemented using thirdparty/notifier
 type Notifier struct {
 	n notifier.Notifier
 }
