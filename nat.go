@@ -8,14 +8,14 @@ import (
 	"sync"
 	"time"
 
-	manet "gx/QmNT7d1e4Xcp3KcsvxyzUHVtqrR43uypoxLLzdKj6YZga2/go-multiaddr-net"
-	ma "gx/QmVUi2ncqnU48zsPgR1rQosDGwY3SSZ1Ndp33j33YjXdsj/go-multiaddr"
+	ma "github.com/jbenet/go-multiaddr"
+	manet "github.com/jbenet/go-multiaddr-net"
 
-	notifier "gx/QmRV5aE4LZ4Kw9g2VAMpbEcaT7uz3Z3WxgdW8mzRPLL7g8/go-notifier"
-	nat "gx/QmWjjKcvWKtkwzbqF6t3Kz3wXA3Uj8DRAbPaTtcgFnvTQt/go-nat"
-	goprocess "gx/QmfDXyLfKNfja2XebomRZjZ2UZCa4BDyFoCymKtzNRVQ5b/goprocess"
-	periodic "gx/QmfDXyLfKNfja2XebomRZjZ2UZCa4BDyFoCymKtzNRVQ5b/goprocess/periodic"
-	logging "gx/QmfZZB1aVXWA4kaR5R4e9NifERT366TTCSagkfhmAbYLsu/go-log"
+	nat "github.com/fd/go-nat"
+	logging "github.com/ipfs/go-log"
+	goprocess "github.com/jbenet/goprocess"
+	periodic "github.com/jbenet/goprocess/periodic"
+	notifier "github.com/whyrusleeping/go-notifier"
 )
 
 var (
