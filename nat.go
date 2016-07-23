@@ -208,7 +208,7 @@ func (m *mapping) ExternalAddr() (ma.Multiaddr, error) {
 	ctime := m.cacheTime
 	cval := m.cached
 	m.cacheLk.Unlock()
-	if time.Now().Sub(ctime) < CacheTime {
+	if time.Since(ctime) < CacheTime {
 		return cval, nil
 	}
 
