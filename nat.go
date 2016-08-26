@@ -163,6 +163,8 @@ type mapping struct {
 	intaddr   ma.Multiaddr
 	proc      goprocess.Process
 
+	comment string
+
 	cached    ma.Multiaddr
 	cacheTime time.Time
 	cacheLk   sync.Mutex
@@ -196,18 +198,6 @@ func (m *mapping) setExternalPort(p int) {
 	m.Lock()
 	defer m.Unlock()
 	m.extport = p
-}
-
-func (m *mapping) setPermanent(p bool) {
-	m.Lock()
-	defer m.Unlock()
-	m.permanent = p
-}
-
-func (m *mapping) isPermanent() bool {
-	m.Lock()
-	defer m.Unlock()
-	return m.permanent
 }
 
 func (m *mapping) InternalAddr() ma.Multiaddr {
@@ -346,20 +336,17 @@ func (nat *NAT) NewMapping(maddr ma.Multiaddr) (Mapping, error) {
 
 func (nat *NAT) establishMapping(m *mapping) {
 	oldport := m.ExternalPort()
-	if oldport != 0 && m.isPermanent() {
-		// mapping was already established and it is permanent
-		return
-	}
 
 	log.Debugf("Attempting port map: %s/%d", m.Protocol(), m.InternalPort())
-	permanent := false
+	comment := "libp2p"
+	if m.comment != "" {
+		comment = "libp2p-" + m.comment
+	}
 
-	newport, err := nat.nat.AddPortMapping(m.Protocol(), m.InternalPort(), "libp2p", MappingDuration)
-
+	newport, err := nat.nat.AddPortMapping(m.Protocol(), m.InternalPort(), comment, MappingDuration)
 	if err != nil {
 		// Some hardware does not support mappings with timeout, so try that
-		newport, err = nat.nat.AddPortMapping(m.Protocol(), m.InternalPort(), "libp2p", 0)
-		permanent = (err == nil)
+		newport, err = nat.nat.AddPortMapping(m.Protocol(), m.InternalPort(), comment, 0)
 	}
 
 	failure := func() {
@@ -379,7 +366,6 @@ func (nat *NAT) establishMapping(m *mapping) {
 		return
 	}
 
-	m.setPermanent(permanent)
 	m.setExternalPort(newport)
 	ext, err := m.ExternalAddr()
 	if err != nil {
