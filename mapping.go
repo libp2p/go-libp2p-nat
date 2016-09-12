@@ -106,7 +106,9 @@ func (m *mapping) ExternalAddr() (ma.Multiaddr, error) {
 		return nil, ErrNoMapping
 	}
 
+	m.nat.natmu.Lock()
 	ip, err := m.nat.nat.GetExternalAddress()
+	m.nat.natmu.Unlock()
 	if err != nil {
 		return nil, err
 	}

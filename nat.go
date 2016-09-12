@@ -52,8 +52,9 @@ func DiscoverNAT() *NAT {
 // service that will periodically renew port mappings,
 // and keep an up-to-date list of all the external addresses.
 type NAT struct {
-	nat  nat.NAT
-	proc goprocess.Process // manages nat mappings lifecycle
+	natmu sync.Mutex
+	nat   nat.NAT
+	proc  goprocess.Process // manages nat mappings lifecycle
 
 	mappingmu sync.RWMutex // guards mappings
 	mappings  map[*mapping]struct{}
@@ -170,11 +171,13 @@ func (nat *NAT) establishMapping(m *mapping) {
 		comment = "libp2p-" + m.comment
 	}
 
+	nat.natmu.Lock()
 	newport, err := nat.nat.AddPortMapping(m.Protocol(), m.InternalPort(), comment, MappingDuration)
 	if err != nil {
 		// Some hardware does not support mappings with timeout, so try that
 		newport, err = nat.nat.AddPortMapping(m.Protocol(), m.InternalPort(), comment, 0)
 	}
+	nat.natmu.Lock()
 
 	failure := func() {
 		m.setExternalPort(0) // clear mapping
