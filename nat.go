@@ -177,7 +177,7 @@ func (nat *NAT) establishMapping(m *mapping) {
 		// Some hardware does not support mappings with timeout, so try that
 		newport, err = nat.nat.AddPortMapping(m.Protocol(), m.InternalPort(), comment, 0)
 	}
-	nat.natmu.Lock()
+	nat.natmu.Unlock()
 
 	failure := func() {
 		m.setExternalPort(0) // clear mapping
