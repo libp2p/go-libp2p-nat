@@ -9,7 +9,7 @@
   "gxDependencies": [
     {
       "author": "fd",
-      "hash": "QmTkqP4XPGtuUTp2myWmxyUKfaVTQQ2jQGWcwToAfrpzwf",
+      "hash": "QmQ8t8yZJv6bTgnDcHMPMgpUcSTnpNMGPjFxmGwZ2MWak9",
       "name": "go-nat",
       "version": "0.0.0"
     },
@@ -42,6 +42,6 @@
   "license": "",
   "name": "go-libp2p-nat",
   "releaseCmd": "git commit -a -m \"gx publish $VERSION\"",
-  "version": "0.0.1"
+  "version": "0.0.2"
 }
 
