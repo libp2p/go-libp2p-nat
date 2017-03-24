@@ -26,9 +26,9 @@
     },
     {
       "author": "multiformats",
-      "hash": "QmVCNGTyD4EkvNYaAp253uMQ9Rjsjy2oGMvcdJJUoVRfja",
+      "hash": "Qmf1Gq7N45Rpuw7ev47uWgH6dLPtdnvcMRNPkVBwqjLJg2",
       "name": "go-multiaddr-net",
-      "version": "1.5.1"
+      "version": "1.5.4"
     },
     {
       "author": "whyrusleeping",
@@ -42,6 +42,6 @@
   "license": "",
   "name": "go-libp2p-nat",
   "releaseCmd": "git commit -a -m \"gx publish $VERSION\"",
-  "version": "0.0.2"
+  "version": "0.0.3"
 }
 
