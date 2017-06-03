@@ -7,7 +7,7 @@ go-libp2p-nat
 [![Coverage Status](https://coveralls.io/repos/github/libp2p/go-libp2p-nat/badge.svg?branch=master)](https://coveralls.io/github/libp2p/go-libp2p-nat?branch=master)
 [![Travis CI](https://travis-ci.org/libp2p/go-libp2p-nat.svg?branch=master)](https://travis-ci.org/libp2p/go-libp2p-nat)
 
-> NAT Traversal code for go-libp2p.
+> NAT port mapping library for go-libp2p.
 
 
 ## Table of Contents
