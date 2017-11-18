@@ -2,6 +2,8 @@ os:
   - linux
   - osx
 
+sudo: flase
+
 language: go
 
 go:
