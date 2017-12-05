@@ -122,7 +122,7 @@ func (nat *NAT) NewMapping(maddr ma.Multiaddr) (Mapping, error) {
 
 	network, addr, err := manet.DialArgs(maddr)
 	if err != nil {
-		return nil, fmt.Errorf("DialArgs failed on addr:", maddr.String())
+		return nil, fmt.Errorf("DialArgs failed on addr: %s", maddr.String())
 	}
 
 	switch network {
@@ -235,10 +235,10 @@ func (nat *NAT) PortMapAddrs(addrs []ma.Multiaddr) {
 	for _, addr := range addrs {
 		// do all of them concurrently
 		wg.Add(1)
-		go func() {
+		go func(addr ma.Multiaddr) {
 			defer wg.Done()
 			nat.NewMapping(addr)
-		}()
+		}(addr)
 	}
 	wg.Wait()
 }
