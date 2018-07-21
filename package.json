@@ -9,9 +9,9 @@
   "gxDependencies": [
     {
       "author": "fd",
-      "hash": "QmQ8t8yZJv6bTgnDcHMPMgpUcSTnpNMGPjFxmGwZ2MWak9",
+      "hash": "QmPfFaAVvKzacBFh2UBqUzczkPNQxGcLyAXKKD1hjC22re",
       "name": "go-nat",
-      "version": "0.0.0"
+      "version": "1.0.0"
     },
     {
       "hash": "QmcVVHfdyv15GVPk7NrxdWjh2hLVccXnoD8j2tyQShiXJb",
