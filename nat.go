@@ -9,7 +9,7 @@ import (
 	"sync"
 	"time"
 
-	nat "github.com/fd/go-nat"
+	nat "github.com/cannium/go-nat"
 	logging "github.com/ipfs/go-log"
 	goprocess "github.com/jbenet/goprocess"
 	periodic "github.com/jbenet/goprocess/periodic"
@@ -108,7 +108,11 @@ func (nat *NAT) rmMapping(m *mapping) {
 	nat.mappingmu.Unlock()
 }
 
-// NewMapping attemps to construct a mapping on protocol and internal port
+const RandomMappingExternalPort = 0
+
+// NewMapping attempts to construct a mapping on protocol and internal port;
+// if `externalPort` equals `RandomMappingExternalPort`, a random port would
+// be selected.
 // It will also periodically renew the mapping until the returned Mapping
 // -- or its parent NAT -- is Closed.
 //
@@ -116,7 +120,7 @@ func (nat *NAT) rmMapping(m *mapping) {
 // NAT devices may not respect our port requests, and even lie.
 // Clients should not store the mapped results, but rather always
 // poll our object for the latest mappings.
-func (nat *NAT) NewMapping(maddr ma.Multiaddr) (Mapping, error) {
+func (nat *NAT) NewMapping(maddr ma.Multiaddr, externalPort int) (Mapping, error) {
 	if nat == nil {
 		return nil, fmt.Errorf("no nat available")
 	}
@@ -170,6 +174,7 @@ func (nat *NAT) NewMapping(maddr ma.Multiaddr) (Mapping, error) {
 		nat:     nat,
 		proto:   network,
 		intport: intport,
+		extport: externalPort,
 		intaddr: maddr,
 	}
 	m.proc = goprocess.WithTeardown(func() error {
@@ -189,19 +194,31 @@ func (nat *NAT) NewMapping(maddr ma.Multiaddr) (Mapping, error) {
 }
 
 func (nat *NAT) establishMapping(m *mapping) {
-	oldport := m.ExternalPort()
+	specifiedExternalPort := m.ExternalPort()
 
-	log.Debugf("Attempting port map: %s/%d", m.Protocol(), m.InternalPort())
+	log.Debugf("Attempting port map: %s/%d - %d", m.Protocol(), m.InternalPort(), specifiedExternalPort)
 	comment := "libp2p"
 	if m.comment != "" {
 		comment = "libp2p-" + m.comment
 	}
 
 	nat.natmu.Lock()
-	newport, err := nat.nat.AddPortMapping(m.Protocol(), m.InternalPort(), comment, MappingDuration)
-	if err != nil {
-		// Some hardware does not support mappings with timeout, so try that
-		newport, err = nat.nat.AddPortMapping(m.Protocol(), m.InternalPort(), comment, 0)
+	var newport int
+	var err error
+	if specifiedExternalPort != RandomMappingExternalPort { // external port is specified
+		newport, err = nat.nat.AddPortMappingSpecifyExternalPort(m.Protocol(), m.InternalPort(), specifiedExternalPort,
+			comment, MappingDuration)
+		if err != nil {
+			// Some hardware does not support mappings with timeout, so try that
+			newport, err = nat.nat.AddPortMappingSpecifyExternalPort(m.Protocol(), m.InternalPort(), specifiedExternalPort,
+				comment, 0)
+		}
+	} else {
+		newport, err = nat.nat.AddPortMapping(m.Protocol(), m.InternalPort(), comment, MappingDuration)
+		if err != nil {
+			// Some hardware does not support mappings with timeout, so try that
+			newport, err = nat.nat.AddPortMapping(m.Protocol(), m.InternalPort(), comment, 0)
+		}
 	}
 	nat.natmu.Unlock()
 
@@ -210,7 +227,7 @@ func (nat *NAT) establishMapping(m *mapping) {
 		// TODO: log.Event
 		log.Warningf("failed to establish port mapping: %s", err)
 		nat.Notifier.notifyAll(func(n Notifiee) {
-			n.MappingFailed(nat, m, oldport, err)
+			n.MappingFailed(nat, m, specifiedExternalPort, err)
 		})
 
 		// we do not close if the mapping failed,
@@ -231,10 +248,10 @@ func (nat *NAT) establishMapping(m *mapping) {
 	}
 
 	log.Debugf("NAT Mapping: %s --> %s", m.InternalAddr(), ext)
-	if oldport != 0 && newport != oldport {
-		log.Debugf("failed to renew same port mapping: ch %d -> %d", oldport, newport)
+	if specifiedExternalPort != RandomMappingExternalPort && newport != specifiedExternalPort {
+		log.Debugf("failed to renew or set port mapping: %d -> %d", specifiedExternalPort, newport)
 		nat.Notifier.notifyAll(func(n Notifiee) {
-			n.MappingChanged(nat, m, oldport, newport)
+			n.MappingChanged(nat, m, specifiedExternalPort, newport)
 		})
 	}
 
@@ -263,7 +280,7 @@ func (nat *NAT) PortMapAddrs(addrs []ma.Multiaddr) {
 		wg.Add(1)
 		go func(addr ma.Multiaddr) {
 			defer wg.Done()
-			nat.NewMapping(addr)
+			nat.NewMapping(addr, RandomMappingExternalPort)
 		}(addr)
 	}
 	wg.Wait()
