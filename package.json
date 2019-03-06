@@ -48,6 +48,6 @@
   "license": "",
   "name": "go-libp2p-nat",
   "releaseCmd": "git commit -a -m \"gx publish $VERSION\"",
-  "version": "0.8.12"
+  "version": "0.8.13"
 }
 
