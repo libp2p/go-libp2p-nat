@@ -8,12 +8,6 @@
   },
   "gxDependencies": [
     {
-      "author": "fd",
-      "hash": "QmPfFaAVvKzacBFh2UBqUzczkPNQxGcLyAXKKD1hjC22re",
-      "name": "go-nat",
-      "version": "1.0.0"
-    },
-    {
       "hash": "QmbkT7eMTyXfpeyB3ZMxxcxg7XH8t6uXp49jqzz4HB7BGF",
       "name": "go-log",
       "version": "1.5.9"
@@ -41,6 +35,12 @@
       "hash": "QmTZBfrPJmjWsCvHEtX5FE6KimVJhsJg5sBbqEFYf4UZtL",
       "name": "go-multiaddr",
       "version": "1.4.1"
+    },
+    {
+      "author": "fd",
+      "hash": "QmdwkZHamNNrj7k3G29rnurmW3mFzsDhnyXppNcgYsiBVz",
+      "name": "go-nat",
+      "version": "1.0.3"
     }
   ],
   "gxVersion": "0.10.0",
