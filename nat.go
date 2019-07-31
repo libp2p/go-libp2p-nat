@@ -190,7 +190,7 @@ func (nat *NAT) establishMapping(m *mapping) {
 	}
 
 	m.setExternalPort(newport)
-	log.Debugf("NAT Mapping: %s --> %s (%s)", m.ExternalPort(), m.InternalPort(), m.Protocol())
+	log.Debugf("NAT Mapping: %d --> %d (%s)", m.ExternalPort(), m.InternalPort(), m.Protocol())
 	if oldport != 0 && newport != oldport {
 		log.Debugf("failed to renew same port mapping: ch %d -> %d", oldport, newport)
 	}
