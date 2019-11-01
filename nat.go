@@ -182,7 +182,6 @@ func (nat *NAT) establishMapping(m *mapping) {
 
 	if err != nil || newport == 0 {
 		m.setExternalPort(0) // clear mapping
-		// TODO: log.Event
 		log.Warnf("failed to establish port mapping: %s", err)
 		// we do not close if the mapping failed,
 		// because it may work again next time.
