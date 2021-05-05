@@ -38,12 +38,11 @@ type Mapping interface {
 type mapping struct {
 	sync.Mutex // guards all fields
 
-	nat       *NAT
-	proto     string
-	intport   int
-	extport   int
-	permanent bool
-	proc      goprocess.Process
+	nat     *NAT
+	proto   string
+	intport int
+	extport int
+	proc    goprocess.Process
 
 	cached    net.IP
 	cacheTime time.Time
