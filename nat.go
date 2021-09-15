@@ -7,7 +7,7 @@ import (
 	"sync"
 	"time"
 
-	logging "github.com/ipfs/go-log"
+	logging "github.com/ipfs/go-log/v2"
 	goprocess "github.com/jbenet/goprocess"
 	periodic "github.com/jbenet/goprocess/periodic"
 	nat "github.com/libp2p/go-nat"
