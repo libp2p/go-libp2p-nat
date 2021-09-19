@@ -8,9 +8,10 @@ import (
 	"time"
 
 	logging "github.com/ipfs/go-log/v2"
-	goprocess "github.com/jbenet/goprocess"
+	"github.com/libp2p/go-nat"
+
+	"github.com/jbenet/goprocess"
 	periodic "github.com/jbenet/goprocess/periodic"
-	nat "github.com/libp2p/go-nat"
 )
 
 var (
@@ -30,24 +31,7 @@ const CacheTime = time.Second * 15
 // DiscoverNAT looks for a NAT device in the network and
 // returns an object that can manage port mappings.
 func DiscoverNAT(ctx context.Context) (*NAT, error) {
-	var (
-		natInstance nat.NAT
-		err         error
-	)
-
-	done := make(chan struct{})
-	go func() {
-		defer close(done)
-		// This will abort in 10 seconds anyways.
-		natInstance, err = nat.DiscoverGateway()
-	}()
-
-	select {
-	case <-done:
-	case <-ctx.Done():
-		return nil, ctx.Err()
-	}
-
+	natInstance, err := nat.DiscoverGateway(ctx)
 	if err != nil {
 		return nil, err
 	}
