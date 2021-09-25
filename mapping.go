@@ -36,11 +36,10 @@ type Mapping interface {
 type mapping struct {
 	sync.Mutex // guards all fields
 
-	nat      *NAT
-	proto    string
-	intport  int
-	extport  int
-	teardown func(*mapping)
+	nat     *NAT
+	proto   string
+	intport int
+	extport int
 
 	cached    net.IP
 	cacheTime time.Time
@@ -115,6 +114,6 @@ func (m *mapping) ExternalAddr() (net.Addr, error) {
 }
 
 func (m *mapping) Close() error {
-	m.teardown(m)
+	m.nat.removeMapping(m)
 	return nil
 }

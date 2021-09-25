@@ -112,10 +112,9 @@ func (nat *NAT) NewMapping(protocol string, port int) (Mapping, error) {
 	}
 
 	m := &mapping{
-		intport:  port,
-		nat:      nat,
-		proto:    protocol,
-		teardown: nat.removeMapping,
+		intport: port,
+		nat:     nat,
+		proto:   protocol,
 	}
 
 	nat.mappingmu.Lock()
